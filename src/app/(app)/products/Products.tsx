@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Search } from 'lucide-react'
@@ -16,7 +15,7 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [productToDelete, setProductToDelete] = useState<Food | null>(null)
 
-  const itemsPerPage = 8
+  const itemsPerPage = 12
 
   // Debounce search input to avoid hitting api on every key stroke
   useEffect(() => {
@@ -41,7 +40,7 @@ const Products = () => {
   // Toggle active/inactive status on backend
   const handleToggleActive = async (id: number | string, _currentStatus?: boolean) => {
     try {
-      await toggleFoodAvailability(id).unwrap()
+      await toggleFoodAvailability(id).unwrap();
     } catch (err) {
       console.error("Failed to toggle status:", err)
       alert("Failed to update status. Please try again.")
