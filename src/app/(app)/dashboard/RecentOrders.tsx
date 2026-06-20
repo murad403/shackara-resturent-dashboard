@@ -87,7 +87,7 @@ const RecentOrders = () => {
             {/* Right Price & View Button */}
             <div className="text-right space-y-1.5 shrink-0">
               <div className="font-bold text-title text-base">
-                ৳{order.price}
+                ${order.price}
               </div>
               <button className="flex items-center gap-1 text-xs font-semibold text-button-color hover:underline cursor-pointer focus:outline-none ml-auto">
                 <Eye className="w-4 h-4" />

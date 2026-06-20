@@ -55,7 +55,7 @@ export default function OrdersPage() {
     >
       {/* Outer Card Wrapper */}
       <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-lg select-none">
-        
+
         {/* Search Bar & Filter Row */}
         <div className="flex gap-3 mb-6 items-center">
           {/* Search Input Box */}
@@ -138,7 +138,7 @@ export default function OrdersPage() {
 
                     {/* Amount value */}
                     <td className="py-4.5 font-bold text-title text-sm whitespace-nowrap">
-                      ৳{order.price}
+                      ${order.price}
                     </td>
 
                     {/* Status Badge */}
@@ -158,7 +158,7 @@ export default function OrdersPage() {
 
                     {/* View Action Trigger */}
                     <td className="py-4.5 pr-2 text-right whitespace-nowrap">
-                      <Link 
+                      <Link
                         href={`/orders/${order.id}`}
                         className="inline-flex items-center gap-1 text-xs font-semibold text-button-color hover:underline cursor-pointer focus:outline-none"
                       >

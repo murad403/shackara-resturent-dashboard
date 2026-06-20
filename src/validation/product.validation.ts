@@ -58,6 +58,7 @@ export const productSchema = z.object({
   sizeVariants: z
     .array(
       z.object({
+        id: z.string().optional(),
         size: z.enum(["SMALL", "MEDIUM", "LARGE"]),
         price: z.preprocess(
           (val) => (val === "" ? undefined : Number(val)),
@@ -70,6 +71,7 @@ export const productSchema = z.object({
   sideOptions: z
     .array(
       z.object({
+        id: z.string().optional(),
         name: z.string().min(1, "Side name is required"),
         price: z.preprocess(
           (val) => (val === "" ? undefined : Number(val)),
@@ -83,6 +85,7 @@ export const productSchema = z.object({
   itemExtras: z
     .array(
       z.object({
+        id: z.string().optional(),
         name: z.string().min(1, "Extra name is required"),
         price: z.preprocess(
           (val) => (val === "" ? undefined : Number(val)),

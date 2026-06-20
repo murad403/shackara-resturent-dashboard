@@ -15,7 +15,7 @@ const QuickStats = () => {
         {/* Average Order Value */}
         <div className="py-3.5 flex items-center justify-between">
           <span className="text-sm font-semibold text-subtitle/85">Average Order Value</span>
-          <span className="text-sm font-bold text-title">৳0</span>
+          <span className="text-sm font-bold text-title">$0</span>
         </div>
 
         {/* Success Rate */}

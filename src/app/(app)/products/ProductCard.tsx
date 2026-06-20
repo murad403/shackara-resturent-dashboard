@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 import { Power, Edit3, Trash2, Image as ImageIcon } from 'lucide-react'
 import { Food } from '@/redux/features/app/app.type'
 import { cn } from '@/lib/utils'
@@ -25,18 +26,20 @@ const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardP
     <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-lg hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all flex flex-col group select-none">
       {/* Product Image and Floating Power Toggle */}
       <div className="relative h-48 w-full overflow-hidden bg-gray-50 shrink-0 flex items-center justify-center">
-        {displayImage ? (
-          <img
-            src={displayImage}
-            alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
-          />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400 gap-1.5 select-none">
-            <ImageIcon className="w-10 h-10 stroke-[1.5] text-gray-300" />
-            <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">No Image</span>
-          </div>
-        )}
+        <Link href={`/products/${product.id}`} className="w-full h-full block">
+          {displayImage ? (
+            <img
+              src={displayImage}
+              alt={product.name}
+              className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50 text-gray-400 gap-1.5 select-none">
+              <ImageIcon className="w-10 h-10 stroke-[1.5] text-gray-300" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">No Image</span>
+            </div>
+          )}
+        </Link>
 
         {/* Active status indicator (floating power icon) */}
         <button
@@ -59,11 +62,13 @@ const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardP
         <div className="space-y-2">
           {/* Header Row: Title & Price */}
           <div className="flex items-start justify-between gap-2">
-            <h4 className="font-bold text-title text-base leading-snug truncate" title={product.name}>
-              {product.name}
-            </h4>
+            <Link href={`/products/${product.id}`} className="hover:text-button-color transition-colors truncate flex-1 block">
+              <h4 className="font-bold text-title text-base leading-snug truncate" title={product.name}>
+                {product.name}
+              </h4>
+            </Link>
             <span className="font-bold text-button-color text-base shrink-0">
-              ৳{product.price}
+              ${product.price}
             </span>
           </div>
 

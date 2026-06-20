@@ -3,16 +3,16 @@
 import React, { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { 
-  ArrowLeft, 
-  User, 
-  Phone, 
-  MapPin, 
-  CreditCard, 
-  Check, 
-  Clock, 
-  Flame, 
-  Package, 
+import {
+  ArrowLeft,
+  User,
+  Phone,
+  MapPin,
+  CreditCard,
+  Check,
+  Clock,
+  Flame,
+  Package,
   X,
   AlertCircle
 } from 'lucide-react'
@@ -123,8 +123,8 @@ export default function OrderDetailsPage({ params }: PageProps) {
     <div className="space-y-6 w-full max-w-6xl mx-auto pb-10 select-none">
       {/* Page Header with Back Navigation */}
       <div className="flex items-center gap-4">
-        <Link 
-          href="/orders" 
+        <Link
+          href="/orders"
           className="w-10 h-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-500 cursor-pointer shadow-xs focus:outline-none shrink-0"
         >
           <ArrowLeft className="w-5 h-5 text-gray-500" />
@@ -141,7 +141,7 @@ export default function OrderDetailsPage({ params }: PageProps) {
 
       {/* Main Grid: Left spans 2 cols, Right spans 1 col */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
+
         {/* Left Column (Items & Timeline) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Order Items Card */}
@@ -155,20 +155,20 @@ export default function OrderDetailsPage({ params }: PageProps) {
                   <div className="space-y-1">
                     <div className="font-bold text-title text-sm">{item.name}</div>
                     <div className="text-xs text-subtitle font-medium">
-                      Quantity: {item.quantity} × ৳{item.price}
+                      Quantity: {item.quantity} × ${item.price}
                     </div>
                   </div>
                   <div className="font-bold text-title text-sm whitespace-nowrap">
-                    ৳{item.quantity * item.price}
+                    ${item.quantity * item.price}
                   </div>
                 </div>
               ))}
             </div>
-            
+
             {/* Total Row */}
             <div className="flex justify-between items-center pt-4 border-t border-gray-100 mt-3">
               <span className="font-bold text-title text-sm md:text-base">Total Amount</span>
-              <span className="font-bold text-title text-sm md:text-base">৳{order.price}</span>
+              <span className="font-bold text-title text-sm md:text-base">${order.price}</span>
             </div>
           </div>
 
@@ -177,7 +177,7 @@ export default function OrderDetailsPage({ params }: PageProps) {
             <h3 className="text-base md:text-lg font-bold text-title mb-6 border-b border-gray-100 pb-3">
               Order Timeline
             </h3>
-            
+
             <div className="space-y-0.5 pl-1.5">
               {order.timeline.map((step, idx) => (
                 <div key={idx} className="relative flex gap-4 pb-8 last:pb-0 group">
@@ -227,7 +227,7 @@ export default function OrderDetailsPage({ params }: PageProps) {
             <h3 className="text-base md:text-lg font-bold text-title mb-5 border-b border-gray-100 pb-3">
               Customer Details
             </h3>
-            
+
             <div className="space-y-5">
               {/* Customer Name */}
               <div className="flex gap-3">
@@ -263,8 +263,8 @@ export default function OrderDetailsPage({ params }: PageProps) {
                   <div className="text-xs font-semibold text-subtitle/85">Payment Status</div>
                   <span className={cn(
                     "inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full border uppercase tracking-wider",
-                    order.paymentStatus === 'Paid' 
-                      ? 'bg-green-100 text-green-800 border-green-200' 
+                    order.paymentStatus === 'Paid'
+                      ? 'bg-green-100 text-green-800 border-green-200'
                       : 'bg-amber-100 text-amber-800 border-amber-200'
                   )}>
                     {order.paymentStatus}
@@ -279,7 +279,7 @@ export default function OrderDetailsPage({ params }: PageProps) {
             <h3 className="text-base md:text-lg font-bold text-title mb-5 border-b border-gray-100 pb-3">
               Actions
             </h3>
-            
+
             <div className="space-y-3">
               {/* Contextual actions depending on order status */}
               {order.status === 'Pending' && (
@@ -292,7 +292,7 @@ export default function OrderDetailsPage({ params }: PageProps) {
                     <Check className="w-4.5 h-4.5 stroke-[2.5]" />
                     <span>Accept Order</span>
                   </Button>
-                  
+
                   <Button
                     type="button"
                     onClick={handleReject}

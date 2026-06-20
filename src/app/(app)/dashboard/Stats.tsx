@@ -49,7 +49,7 @@ const Stats = () => {
       {/* 5. Total Earnings */}
       <StatsCard
         title="Total Earnings"
-        value="৳0"
+        value="$0"
         icon={<DollarSign className="w-5 h-5" />}
         iconBgColor="bg-[#9333EA]"
       />

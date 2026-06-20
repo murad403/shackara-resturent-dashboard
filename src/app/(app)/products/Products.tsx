@@ -7,6 +7,7 @@ import DeleteProductModal from '@/components/modal/DeleteProductModal'
 import CustomPagination from '@/components/shared/CustomPagination'
 import { useGetAllFoodsQuery, useDeleteFoodMutation, useToggleFoodAvailabilityMutation } from '@/redux/features/app/app.api'
 import { Food } from '@/redux/features/app/app.type'
+import { toast } from 'sonner'
 
 const Products = () => {
   const router = useRouter()
@@ -38,12 +39,13 @@ const Products = () => {
   const totalPages = response?.pagination?.totalPages || 1
 
   // Toggle active/inactive status on backend
-  const handleToggleActive = async (id: number | string, _currentStatus?: boolean) => {
+  const handleToggleActive = async (id: number | string, currentStatus?: boolean) => {
     try {
       await toggleFoodAvailability(id).unwrap();
-    } catch (err) {
+      toast.success(`Product ${currentStatus ? 'deactivated' : 'activated'} successfully`);
+    } catch (err: any) {
       console.error("Failed to toggle status:", err)
-      alert("Failed to update status. Please try again.")
+      toast.error(err?.data?.message || "Failed to update status. Please try again.")
     }
   }
 
@@ -65,10 +67,11 @@ const Products = () => {
     if (productToDelete) {
       try {
         await deleteFood(productToDelete.id).unwrap()
+        toast.success("Product deleted successfully")
         setProductToDelete(null)
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to delete product:", err)
-        alert("Failed to delete product. Please try again.")
+        toast.error(err?.data?.message || "Failed to delete product. Please try again.")
       }
     }
   }

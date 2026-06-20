@@ -19,6 +19,67 @@ interface ImageItem {
   file?: File
 }
 
+function EditProductSkeleton() {
+  return (
+    <div className="space-y-6 max-w-4xl mx-auto pb-10 select-none animate-pulse">
+      {/* Header Skeleton */}
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 rounded-lg bg-gray-200" />
+        <div className="space-y-2">
+          <div className="h-6 bg-gray-200 rounded w-32" />
+          <div className="h-3 bg-gray-100 rounded w-24" />
+        </div>
+      </div>
+
+      {/* Core Details Skeleton */}
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
+        <div className="h-5 bg-gray-200 rounded w-28 pb-3 border-b border-gray-100" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+          {[1, 2, 3, 4, 5, 6].map(n => (
+            <div key={n} className="space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-20" />
+              <div className="h-10 bg-gray-100 rounded w-full" />
+            </div>
+          ))}
+        </div>
+        
+        <div className="space-y-2 pt-4">
+          <div className="h-4 bg-gray-200 rounded w-20" />
+          <div className="h-24 bg-gray-100 rounded w-full" />
+        </div>
+      </div>
+
+      {/* Nutritional & Prep Skeleton */}
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 md:p-8 space-y-6 shadow-sm">
+        <div className="h-5 bg-gray-200 rounded w-44 pb-3 border-b border-gray-100" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 rounded w-24" />
+            <div className="h-10 bg-gray-100 rounded w-full" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 rounded w-36" />
+            <div className="h-10 bg-gray-100 rounded w-full" />
+          </div>
+        </div>
+      </div>
+
+      {/* Images Skeleton */}
+      <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 md:p-8 space-y-4 shadow-sm">
+        <div className="h-5 bg-gray-200 rounded w-28 pb-3 border-b border-gray-100" />
+        <div className="h-32 bg-gray-50 border border-dashed border-gray-200 rounded-xl" />
+      </div>
+
+      {/* Action buttons footer */}
+      <div className="flex items-center justify-end gap-4 border-t border-gray-100 pt-6">
+        <div className="h-11 bg-gray-100 rounded w-24" />
+        <div className="h-11 bg-gray-200 rounded w-32" />
+      </div>
+    </div>
+  )
+}
+
 function EditProductForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -106,15 +167,18 @@ function EditProductForm() {
         description: cleanDesc,
         images: initialImages.map(img => img.url),
         sizeVariants: (food.sizeVariants || []).map(v => ({
-          size: v.size,
+          id: v.id,
+          size: v.size as "SMALL" | "MEDIUM" | "LARGE",
           price: Number(v.price)
         })),
         sideOptions: (food.sideOptions || []).map(o => ({
+          id: o.id,
           name: o.name,
           price: Number(o.price),
           isDefault: o.isDefault
         })),
         itemExtras: (food.itemExtras || []).map(e => ({
+          id: e.id,
           name: e.name,
           price: Number(e.price)
         })),
@@ -226,12 +290,7 @@ function EditProductForm() {
   }
 
   if (isFetching) {
-    return (
-      <div className="text-center py-20 bg-white border border-gray-200 rounded-2xl p-6 max-w-xl mx-auto animate-pulse space-y-4">
-        <div className="h-6 bg-gray-100 rounded w-1/3 mx-auto" />
-        <div className="h-4 bg-gray-100 rounded w-1/2 mx-auto" />
-      </div>
-    )
+    return <EditProductSkeleton />
   }
 
   if (fetchError || !food) {
@@ -331,7 +390,7 @@ function EditProductForm() {
 
             {/* Product Price Input */}
             <div className="space-y-2">
-              <Label htmlFor="price">Price (BDT) *</Label>
+              <Label htmlFor="price">Price *</Label>
               <Input
                 id="price"
                 type="text"
@@ -520,7 +579,7 @@ function EditProductForm() {
             <Button
               type="button"
               onClick={() => appendSize({ size: 'MEDIUM', price: 0 })}
-              className="bg-button-color text-xs h-8 px-3 flex items-center gap-1.5 font-semibold cursor-pointer"
+              className="bg-button-color text-xs h-8 px-3 flex items-center gap-1.5 w-auto font-semibold cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Size</span>
@@ -545,7 +604,7 @@ function EditProductForm() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label className="text-xs">Variant Price (BDT) *</Label>
+                      <Label className="text-xs">Variant Price *</Label>
                       <Input
                         type="text"
                         placeholder="0"
@@ -579,7 +638,7 @@ function EditProductForm() {
             <Button
               type="button"
               onClick={() => appendSide({ name: '', price: 0, isDefault: false })}
-              className="bg-button-color text-xs h-8 px-3 flex items-center gap-1.5 font-semibold cursor-pointer"
+              className="bg-button-color text-xs h-8 px-3 flex items-center gap-1.5 w-auto font-semibold cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Side Option</span>
@@ -602,7 +661,7 @@ function EditProductForm() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label className="text-xs">Side Price (BDT) *</Label>
+                      <Label className="text-xs">Side Price *</Label>
                       <Input
                         type="text"
                         placeholder="0"
@@ -656,7 +715,7 @@ function EditProductForm() {
             <Button
               type="button"
               onClick={() => appendExtra({ name: '', price: 0 })}
-              className="bg-button-color text-xs h-8 px-3 flex items-center gap-1.5 font-semibold cursor-pointer"
+              className="bg-button-color text-xs h-8 px-3 flex items-center gap-1.5 w-auto font-semibold cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Extra Item</span>
@@ -679,7 +738,7 @@ function EditProductForm() {
                     </div>
 
                     <div className="space-y-1.5">
-                      <Label className="text-xs">Extra Price (BDT) *</Label>
+                      <Label className="text-xs">Extra Price *</Label>
                       <Input
                         type="text"
                         placeholder="0"
@@ -733,11 +792,7 @@ function EditProductForm() {
 
 export default function EditProductPage() {
   return (
-    <Suspense fallback={
-      <div className="text-center py-20 bg-white border border-gray-200 rounded-2xl p-6 max-w-xl mx-auto">
-        <p className="text-sm text-subtitle font-medium">Loading form details...</p>
-      </div>
-    }>
+    <Suspense fallback={<EditProductSkeleton />}>
       <EditProductForm />
     </Suspense>
   )
