@@ -68,7 +68,7 @@ export default function OrdersPage() {
               placeholder="Search by order ID or customer name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex h-11 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm text-[#0A0A0A] transition-all placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-button-color focus-visible:border-button-color"
+              className="flex h-11 w-full rounded-lg border border-gray-200 bg-white pl-11 pr-4 text-sm text-title transition-all placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-button-color focus-visible:border-button-color"
             />
           </div>
 
