@@ -42,7 +42,7 @@ const AdminSidebar = ({
       title: 'MAIN',
       items: [
         { name: 'Dashboard', href: '/', icon: LayoutDashboard },
-        { name: 'Products', href: '/products', icon: ShoppingBag },
+        { name: 'Foods', href: '/foods', icon: ShoppingBag },
       ]
     },
     {

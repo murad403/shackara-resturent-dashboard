@@ -1,24 +1,14 @@
 "use client"
-
 import React, { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
-  ArrowLeft,
-  User,
-  Phone,
-  MapPin,
-  CreditCard,
-  Check,
-  Clock,
-  Flame,
-  Package,
-  X,
-  AlertCircle
+  ArrowLeft, User, Phone, MapPin, CreditCard, Check, Clock, Flame, Package, X, AlertCircle
 } from 'lucide-react'
-import { getOrders, saveOrders, Order, OrderTimelineStep } from '@/lib/ordersStore'
+import { getOrders, saveOrders, Order } from '@/lib/ordersStore'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -191,7 +181,7 @@ export default function OrderDetailsPage({ params }: PageProps) {
                   <div className="relative z-10 shrink-0">
                     {step.completed ? (
                       <div className="w-8 h-8 rounded-full bg-[#16A34A] text-white flex items-center justify-center border-2 border-green-50 shadow-xs">
-                        <Check className="w-4.5 h-4.5 stroke-[3]" />
+                        <Check className="w-4.5 h-4.5 stroke-3" />
                       </div>
                     ) : (
                       <div className="w-8 h-8 rounded-full border-2 border-gray-200 bg-white text-gray-300 flex items-center justify-center shadow-xs">

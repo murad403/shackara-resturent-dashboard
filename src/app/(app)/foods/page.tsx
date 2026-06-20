@@ -17,7 +17,7 @@ const Page = () => {
 
   return (
     <DashboardChildrenLayout
-      title="Products"
+      title="Foods"
       subtitle="Manage your menu items"
       headerAction={headerActions}
     >
