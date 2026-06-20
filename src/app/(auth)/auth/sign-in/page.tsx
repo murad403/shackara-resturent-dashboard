@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,8 +27,8 @@ export default function SignInPage() {
   } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: 'mdmurad.dev2004@gmail.com',
+      password: '12345678',
     },
   })
 

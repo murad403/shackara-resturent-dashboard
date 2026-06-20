@@ -1,8 +1,7 @@
 "use client"
-
-import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { removeToken } from '@/lib/auth'
 import { 
   LayoutDashboard, 
   ShoppingBag, 
@@ -31,6 +30,12 @@ const AdminSidebar = ({
   setMobileOpen 
 }: SidebarProps) => {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await removeToken()
+    router.push('/auth/sign-in')
+  }
 
   const navGroups = [
     {
@@ -144,11 +149,13 @@ const AdminSidebar = ({
 
       {/* Sidebar Footer (Logout) */}
       <div className="p-3 border-t border-[#E5E7EB] shrink-0">
-        <Link
-          href="/auth/sign-in"
-          onClick={() => mobileOpen && setMobileOpen(false)}
+        <button
+          onClick={() => {
+            if (mobileOpen) setMobileOpen(false)
+            handleLogout()
+          }}
           className={cn(
-            "flex items-center rounded-lg text-sm transition-all relative group w-full h-11",
+            "flex items-center rounded-lg text-sm transition-all relative group w-full h-11 cursor-pointer focus:outline-none",
             isCollapsed && !mobileOpen 
               ? "justify-center px-0 gap-0" 
               : "justify-start px-3 py-2.5 gap-3",
@@ -163,7 +170,7 @@ const AdminSidebar = ({
               Logout
             </div>
           )}
-        </Link>
+        </button>
       </div>
     </div>
   )

@@ -1,8 +1,7 @@
 "use client"
-
-import React from 'react'
-import Link from 'next/link'
 import { Bell, Settings, LogOut, Menu } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { removeToken } from '@/lib/auth'
 
 interface TopbarProps {
   isSidebarCollapsed: boolean
@@ -11,10 +10,15 @@ interface TopbarProps {
 }
 
 const AdminTopbar = ({ 
-  isSidebarCollapsed, 
-  setIsSidebarCollapsed, 
   setMobileOpen 
 }: TopbarProps) => {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await removeToken()
+    router.push('/auth/sign-in')
+  }
+
   return (
     <header className="h-16 border-b border-[#E5E7EB] bg-white px-4 md:px-6 flex items-center justify-between sticky top-0 z-20 shrink-0 select-none">
       {/* Left side: Hamburger (Mobile) + Welcome (Desktop) */}
@@ -66,13 +70,13 @@ const AdminTopbar = ({
           </div>
           
           {/* Logout Button */}
-          <Link
-            href="/auth/sign-in"
-            className="flex items-center gap-1.5 text-sm font-semibold text-gray-500 hover:text-red-600 transition-colors"
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 text-sm font-semibold text-gray-500 hover:text-red-600 transition-colors cursor-pointer focus:outline-none"
           >
             <LogOut className="w-4 h-4 text-gray-400" />
             <span className="hidden sm:inline">Logout</span>
-          </Link>
+          </button>
         </div>
       </div>
     </header>
