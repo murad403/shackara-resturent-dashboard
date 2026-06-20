@@ -1,27 +1,16 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { ClipboardList, Clock, Flame, Check, DollarSign, Package } from 'lucide-react'
 import StatsCard from './StatsCard'
-import { getProducts } from '@/lib/productsStore'
+import { useGetAllFoodsQuery } from '@/redux/features/app/app.api'
 
 const Stats = () => {
-  const [productStats, setProductStats] = useState({ active: 3, total: 4 })
+  const { data: response, isLoading } = useGetAllFoodsQuery({})
+  const foods = response?.data || []
 
-  const updateStats = () => {
-    const products = getProducts()
-    const active = products.filter((p) => p.isActive).length
-    const total = products.length
-    setProductStats({ active, total })
-  }
-
-  useEffect(() => {
-    updateStats()
-    window.addEventListener('products-updated', updateStats)
-    return () => {
-      window.removeEventListener('products-updated', updateStats)
-    }
-  }, [])
+  const activeCount = foods.filter((f) => f.isAvailable).length
+  const totalCount = foods.length
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -68,7 +57,7 @@ const Stats = () => {
       {/* 6. Active Products */}
       <StatsCard
         title="Active Products"
-        value={`${productStats.active}/${productStats.total}`}
+        value={isLoading ? "Loading..." : `${activeCount}/${totalCount}`}
         icon={<Package className="w-5 h-5" />}
         iconBgColor="bg-[#EC4899]"
       />

@@ -1,9 +1,9 @@
 import baseApi from "@/redux/api/api";
-import { 
-  ChangePasswordRequest, 
-  GenericResponse, 
-  SignInResponse, 
-  VerifyOtpResponse 
+import {
+  ChangePasswordRequest,
+  GenericResponse,
+  SignInResponse,
+  VerifyOtpResponse
 } from "./auth.type";
 
 const authApi = baseApi.injectEndpoints({
@@ -32,13 +32,13 @@ const authApi = baseApi.injectEndpoints({
           url: "/auth/forgot-password",
           method: "POST",
           body: data
-        } 
+        }
       }
     }),
     verifyOtp: builder.mutation<VerifyOtpResponse, any>({
       query: (data) => {
         return {
-                    url: "/auth/reset-password",
+          url: "/auth/reset-password",
           method: "POST",
           body: data
         }

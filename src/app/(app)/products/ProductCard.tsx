@@ -1,20 +1,25 @@
 import React from 'react'
 import { Power, Edit3, Trash2 } from 'lucide-react'
-import { Product } from '@/lib/productsStore'
+import { Food } from '@/redux/features/app/app.type'
 import { cn } from '@/lib/utils'
 
 interface ProductCardProps {
-  product: Product
-  onToggleActive: (id: string) => void
-  onEdit: (id: string) => void
-  onDelete: (id: string) => void
+  product: Food
+  onToggleActive: (id: number | string, currentStatus: boolean) => void
+  onEdit: (id: number | string) => void
+  onDelete: (id: number | string) => void
 }
 
 const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardProps) => {
   // Use first image if available, else a fallback mockup image
   const displayImage = product.images && product.images.length > 0
-    ? product.images[0]
+    ? product.images[0].url
     : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60'
+
+  // Helper to remove any HTML tags from backend description for card preview
+  const cleanDescription = product.description
+    ? product.description.replace(/<[^>]*>/g, '')
+    : ''
 
   return (
     <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-lg hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all flex flex-col group select-none">
@@ -29,14 +34,14 @@ const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardP
         {/* Active status indicator (floating power icon) */}
         <button
           type="button"
-          onClick={() => onToggleActive(product.id)}
+          onClick={() => onToggleActive(product.id, product.isAvailable)}
           className={cn(
             "absolute top-3.5 right-3.5 w-8 h-8 rounded-full flex items-center justify-center text-white shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95 focus:outline-none",
-            product.isActive
+            product.isAvailable
               ? "bg-[#16A34A] hover:bg-[#15803d]"
               : "bg-gray-500/80 backdrop-blur-xs hover:bg-gray-600"
           )}
-          title={product.isActive ? "Deactivate product" : "Activate product"}
+          title={product.isAvailable ? "Deactivate product" : "Activate product"}
         >
           <Power className="w-4.5 h-4.5 stroke-[2.5]" />
         </button>
@@ -57,12 +62,12 @@ const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardP
 
           {/* Category Tag */}
           <span className="inline-block text-[10px] font-bold text-gray-500 bg-gray-100 px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            {product.category}
+            {product.category?.name || 'Uncategorized'}
           </span>
 
           {/* Description */}
-          <p className="text-xs text-subtitle line-clamp-2 leading-relaxed min-h-[34px]">
-            {product.description}
+          <p className="text-xs text-subtitle line-clamp-2 leading-relaxed min-h-[34px]" title={cleanDescription}>
+            {cleanDescription}
           </p>
         </div>
 

@@ -8,7 +8,7 @@ export const productSchema = z.object({
   price: z
     .preprocess(
       (val) => (val === "" ? undefined : Number(val)),
-      z.number({ invalid_type_error: "Price must be a number" })
+      z.number({ message: "Price must be a number" })
         .positive("Price must be greater than 0")
     ),
   category: z
