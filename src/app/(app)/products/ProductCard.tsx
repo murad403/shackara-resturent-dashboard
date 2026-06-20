@@ -12,28 +12,28 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardProps) => {
   // Use first image if available, else a fallback mockup image
-  const displayImage = product.images && product.images.length > 0 
-    ? product.images[0] 
+  const displayImage = product.images && product.images.length > 0
+    ? product.images[0]
     : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60'
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-[0_4px_20px_rgb(0,0,0,0.01)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all flex flex-col group select-none">
+    <div className="bg-white border border-[#E5E7EB] rounded-2xl overflow-hidden shadow-lg hover:shadow-[0_8px_30px_rgb(0,0,0,0.02)] transition-all flex flex-col group select-none">
       {/* Product Image and Floating Power Toggle */}
       <div className="relative h-48 w-full overflow-hidden bg-gray-50 shrink-0">
-        <img 
-          src={displayImage} 
+        <img
+          src={displayImage}
           alt={product.name}
           className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
         />
-        
+
         {/* Active status indicator (floating power icon) */}
         <button
           type="button"
           onClick={() => onToggleActive(product.id)}
           className={cn(
             "absolute top-3.5 right-3.5 w-8 h-8 rounded-full flex items-center justify-center text-white shadow-md cursor-pointer transition-all hover:scale-105 active:scale-95 focus:outline-none",
-            product.isActive 
-              ? "bg-[#16A34A] hover:bg-[#15803d]" 
+            product.isActive
+              ? "bg-[#16A34A] hover:bg-[#15803d]"
               : "bg-gray-500/80 backdrop-blur-xs hover:bg-gray-600"
           )}
           title={product.isActive ? "Deactivate product" : "Activate product"}

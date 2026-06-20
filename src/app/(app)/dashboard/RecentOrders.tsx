@@ -52,7 +52,7 @@ const RecentOrders = () => {
   }
 
   return (
-    <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-[0_4px_20px_rgb(0,0,0,0.01)] select-none">
+    <div className="bg-white border border-[#E5E7EB] rounded-2xl p-6 shadow-lg select-none">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-bold text-title">Recent Orders</h3>

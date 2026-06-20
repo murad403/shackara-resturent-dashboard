@@ -172,7 +172,7 @@ const AdminSidebar = ({
     <>
       {/* Desktop Sidebar (Permanent, collapsible) */}
       <aside className={cn(
-        "hidden md:block h-screen top-0 shrink-0 transition-all duration-300 z-30 relative",
+        "hidden md:block h-screen top-0 shrink-0 transition-all duration-300 z-30 sticky",
         isCollapsed ? "w-20" : "w-64"
       )}>
         {sidebarContent}
