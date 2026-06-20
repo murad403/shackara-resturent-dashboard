@@ -26,7 +26,7 @@ export default function AddProductPage() {
     watch,
     formState: { errors },
   } = useForm<ProductInput>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productSchema) as any,
     defaultValues: {
       name: '',
       price: undefined,
@@ -197,7 +197,7 @@ export default function AddProductPage() {
                 id="description"
                 placeholder="Describe your product..."
                 rows={4}
-                className="flex w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-[#0A0A0A] transition-all placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-button-color focus-visible:border-button-color"
+                className="flex w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm text-title transition-all placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-button-color focus-visible:border-button-color"
                 {...register('description')}
               />
               {errors.description && (

@@ -11,9 +11,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
+import { useSignInMutation } from '@/redux/features/auth/auth.api'
+import { saveToken } from '@/lib/auth'
+
 export default function SignInPage() {
   const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  const [signIn, { isLoading }] = useSignInMutation()
+
   const {
     register,
     handleSubmit,
@@ -26,14 +33,25 @@ export default function SignInPage() {
     },
   })
 
-  const onSubmit = (data: LoginInput) => {
-    console.log("Login successful! Data:", data)
-    // Simulate redirection or login completion
-    alert("Logged in successfully (Simulated)")
+  const onSubmit = async (data: LoginInput) => {
+    setErrorMsg(null)
+    try {
+      const response = await signIn(data).unwrap()
+      if (response.success) {
+        const { accessToken, refreshToken } = response.data.tokens
+        await saveToken(accessToken, refreshToken)
+        router.push('/')
+      } else {
+        setErrorMsg(response.message || 'Login failed')
+      }
+    } catch (err: any) {
+      console.error('Sign-in error:', err)
+      setErrorMsg(err?.data?.message || 'Login failed. Please check your credentials.')
+    }
   }
 
   return (
-    <div className="w-full max-w-[460px] mx-auto bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+    <div className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
       {/* Icon Header */}
       <div className="flex items-center justify-center mx-auto mb-6">
         <div className="w-[64px] h-[64px] rounded-full bg-button-color flex items-center justify-center text-white shadow-sm">
@@ -44,7 +62,7 @@ export default function SignInPage() {
       {/* Header text */}
       <div className="text-center mb-8">
         <h1 className="text-[22px] font-semibold text-title tracking-tight mb-2">
-          Admin Login
+          Resturent Login
         </h1>
         <p className="text-sm text-subtitle">
           Sign in to access the dashboard
@@ -53,6 +71,12 @@ export default function SignInPage() {
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {errorMsg && (
+          <div className="p-3.5 rounded-lg bg-red-50 border border-red-100 text-red-600 text-xs font-semibold leading-normal animate-in fade-in-50 duration-150">
+            {errorMsg}
+          </div>
+        )}
+
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
@@ -112,8 +136,8 @@ export default function SignInPage() {
 
         {/* Submit Button */}
         <div className="pt-2">
-          <Button type="submit">
-            Login
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? 'Logging in...' : 'Login'}
           </Button>
         </div>
       </form>

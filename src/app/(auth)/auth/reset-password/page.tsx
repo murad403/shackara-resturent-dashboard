@@ -1,19 +1,27 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Lock, Eye, EyeOff } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { resetPasswordSchema, type ResetPasswordInput } from '@/validation/auth.validation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useResetPasswordMutation } from '@/redux/features/auth/auth.api'
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const email = searchParams.get('email') || ''
+  const otp = searchParams.get('otp') || ''
+
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  const [resetPassword, { isLoading }] = useResetPasswordMutation()
 
   const {
     register,
@@ -27,13 +35,32 @@ export default function ResetPasswordPage() {
     },
   })
 
-  const onSubmit = (data: ResetPasswordInput) => {
-    console.log("Reset password confirmed! Data:", data)
-    router.push('/auth/auth-success')
+  const onSubmit = async (data: ResetPasswordInput) => {
+    if (!email || !otp) {
+      setErrorMsg('Email or OTP is missing. Cannot reset password.')
+      return
+    }
+    setErrorMsg(null)
+    try {
+      const response = await resetPassword({
+        email,
+        otp,
+        newPassword: data.password,
+      }).unwrap()
+
+      if (response.success) {
+        router.push('/auth/auth-success')
+      } else {
+        setErrorMsg(response.message || 'Failed to reset password')
+      }
+    } catch (err: any) {
+      console.error('Reset password error:', err)
+      setErrorMsg(err?.data?.message || 'Failed to reset password. Please try again.')
+    }
   }
 
   return (
-    <div className="w-full max-w-[460px] mx-auto bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+    <div className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
       {/* Icon Header */}
       <div className="flex items-center justify-center mx-auto mb-6">
         <div className="w-[64px] h-[64px] rounded-full bg-button-color flex items-center justify-center text-white shadow-sm">
@@ -53,6 +80,18 @@ export default function ResetPasswordPage() {
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        {(!email || !otp) && (
+          <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-100 text-amber-700 text-xs font-semibold leading-normal text-center">
+            Credentials parameter is missing. Please restart the forgot password process.
+          </div>
+        )}
+
+        {errorMsg && (
+          <div className="p-3.5 rounded-lg bg-red-50 border border-red-100 text-red-600 text-xs font-semibold leading-normal text-center animate-in fade-in-50 duration-150">
+            {errorMsg}
+          </div>
+        )}
+
         <div className="space-y-3">
           <Label htmlFor="password">New password</Label>
           
@@ -115,11 +154,19 @@ export default function ResetPasswordPage() {
 
         {/* Submit Button */}
         <div className="pt-2">
-          <Button type="submit">
-            Confirm
+          <Button type="submit" disabled={isLoading || !email || !otp}>
+            {isLoading ? 'Confirming...' : 'Confirm'}
           </Button>
         </div>
       </form>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div className="text-center p-8 text-sm text-subtitle">Loading...</div>}>
+      <ResetPasswordForm />
+    </Suspense>
   )
 }

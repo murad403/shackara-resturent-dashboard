@@ -1,6 +1,4 @@
 "use client"
-
-import React from 'react'
 import { Check } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -13,7 +11,7 @@ export default function AuthSuccessPage() {
   }
 
   return (
-    <div className="w-full max-w-[460px] mx-auto bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+    <div className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
       {/* Success Checkmark Header */}
       <div className="flex items-center justify-center mx-auto mb-6">
         <div className="w-[64px] h-[64px] rounded-full bg-[#16A34A] flex items-center justify-center text-white shadow-sm">

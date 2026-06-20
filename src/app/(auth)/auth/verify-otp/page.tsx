@@ -1,27 +1,35 @@
 "use client"
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Lock } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { verifyOtpSchema, type VerifyOtpInput } from '@/validation/auth.validation'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
+import { useVerifyOtpMutation, useForgotPasswordMutation } from '@/redux/features/auth/auth.api'
 
-export default function VerifyOtpPage() {
+function VerifyOtpForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const email = searchParams.get('email') || ''
+
   const [otpValues, setOtpValues] = useState<string[]>(['', '', '', '', '', ''])
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   
   // Timer State
   const [timeLeft, setTimeLeft] = useState(59)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [successMsg, setSuccessMsg] = useState<string | null>(null)
+
+  const [verifyOtp, { isLoading: isVerifying }] = useVerifyOtpMutation()
+  const [forgotPassword] = useForgotPasswordMutation()
   
   const {
     handleSubmit,
     setValue,
     formState: { errors },
-    trigger,
   } = useForm<VerifyOtpInput>({
     resolver: zodResolver(verifyOtpSchema),
     defaultValues: {
@@ -93,20 +101,51 @@ export default function VerifyOtpPage() {
     }
   }
 
-  const handleResend = () => {
+  const handleResend = async () => {
     if (timeLeft === 0) {
-      setTimeLeft(59)
-      console.log("OTP Resent (Simulated)")
+      if (!email) {
+        setErrorMsg('Email parameter is missing. Cannot resend OTP.')
+        return
+      }
+      setErrorMsg(null)
+      setSuccessMsg(null)
+      try {
+        const response = await forgotPassword({ email }).unwrap()
+        if (response.success) {
+          setTimeLeft(59)
+          setSuccessMsg('OTP verified successfully, you will receive a new password reset link.')
+        } else {
+          setErrorMsg(response.message || 'Failed to resend OTP')
+        }
+      } catch (err: any) {
+        setErrorMsg(err?.data?.message || 'Failed to resend OTP. Please try again.')
+      }
     }
   }
 
-  const onSubmit = (data: VerifyOtpInput) => {
-    console.log("OTP verified successfully! Code:", data.otp)
-    router.push('/auth/reset-password')
+  const onSubmit = async (data: VerifyOtpInput) => {
+    if (!email) {
+      setErrorMsg('Email address is missing. Please go back to Forgot Password.')
+      return
+    }
+    setErrorMsg(null)
+    setSuccessMsg(null)
+    try {
+      const response = await verifyOtp({ email, otp: data.otp }).unwrap()
+      if (response.success) {
+        // Go to reset-password with query credentials
+        router.push(`/auth/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(data.otp)}`)
+      } else {
+        setErrorMsg(response.message || 'OTP verification failed')
+      }
+    } catch (err: any) {
+      console.error('Verify OTP error:', err)
+      setErrorMsg(err?.data?.message || 'OTP verification failed. Please try again.')
+    }
   }
 
   return (
-    <div className="w-full max-w-[460px] mx-auto bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
+    <div className="w-full bg-white border border-[#E5E7EB] rounded-2xl p-8 md:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.02)]">
       {/* Icon Header */}
       <div className="flex items-center justify-center mx-auto mb-6">
         <div className="w-[64px] h-[64px] rounded-full bg-button-color flex items-center justify-center text-white shadow-sm">
@@ -126,6 +165,24 @@ export default function VerifyOtpPage() {
 
       {/* Form */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {!email && (
+          <div className="p-3.5 rounded-lg bg-amber-50 border border-amber-100 text-amber-700 text-xs font-semibold leading-normal text-center">
+            Email parameter is missing from request. Please restart the forgot password process.
+          </div>
+        )}
+
+        {errorMsg && (
+          <div className="p-3.5 rounded-lg bg-red-50 border border-red-100 text-red-600 text-xs font-semibold leading-normal text-center animate-in fade-in-50 duration-150">
+            {errorMsg}
+          </div>
+        )}
+
+        {successMsg && (
+          <div className="p-3.5 rounded-lg bg-green-50 border border-green-100 text-green-600 text-xs font-semibold leading-normal text-center animate-in fade-in-50 duration-150">
+            {successMsg}
+          </div>
+        )}
+
         {/* OTP digit inputs */}
         <div className="flex flex-col items-center">
           <div className="flex justify-center gap-3.5 w-full">
@@ -154,8 +211,8 @@ export default function VerifyOtpPage() {
         </div>
 
         {/* Submit Button */}
-        <Button type="submit">
-          Verify
+        <Button type="submit" disabled={isVerifying || !email}>
+          {isVerifying ? 'Verifying...' : 'Verify'}
         </Button>
 
         {/* Resend Link and Timer */}
@@ -169,7 +226,8 @@ export default function VerifyOtpPage() {
             <button
               type="button"
               onClick={handleResend}
-              className="font-semibold text-button-color hover:underline focus:outline-none"
+              disabled={!email}
+              className="font-semibold text-button-color hover:underline focus:outline-none disabled:opacity-50"
             >
               Resend
             </button>
@@ -177,5 +235,13 @@ export default function VerifyOtpPage() {
         </div>
       </form>
     </div>
+  )
+}
+
+export default function VerifyOtpPage() {
+  return (
+    <Suspense fallback={<div className="text-center p-8 text-sm text-subtitle">Loading...</div>}>
+      <VerifyOtpForm />
+    </Suspense>
   )
 }

@@ -29,7 +29,7 @@ function EditProductForm() {
     reset,
     formState: { errors },
   } = useForm<ProductInput>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(productSchema) as any,
     defaultValues: {
       name: '',
       price: undefined,
