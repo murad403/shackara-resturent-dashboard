@@ -6,7 +6,7 @@ import { Search } from 'lucide-react'
 import ProductCard from './ProductCard'
 import DeleteProductModal from '@/components/modal/DeleteProductModal'
 import CustomPagination from '@/components/shared/CustomPagination'
-import { useGetAllFoodsQuery, useDeleteFoodMutation, useUpdateFoodMutation } from '@/redux/features/app/app.api'
+import { useGetAllFoodsQuery, useDeleteFoodMutation, useToggleFoodAvailabilityMutation } from '@/redux/features/app/app.api'
 import { Food } from '@/redux/features/app/app.type'
 
 const Products = () => {
@@ -33,18 +33,15 @@ const Products = () => {
     limit: itemsPerPage
   })
   const [deleteFood] = useDeleteFoodMutation()
-  const [updateFood] = useUpdateFoodMutation()
+  const [toggleFoodAvailability] = useToggleFoodAvailabilityMutation()
 
   const foods = response?.data || []
   const totalPages = response?.pagination?.totalPages || 1
 
   // Toggle active/inactive status on backend
-  const handleToggleActive = async (id: number | string, currentStatus: boolean) => {
+  const handleToggleActive = async (id: number | string, _currentStatus?: boolean) => {
     try {
-      await updateFood({
-        productId: id,
-        data: { isAvailable: !currentStatus }
-      }).unwrap()
+      await toggleFoodAvailability(id).unwrap()
     } catch (err) {
       console.error("Failed to toggle status:", err)
       alert("Failed to update status. Please try again.")

@@ -21,7 +21,7 @@ const appApi = baseApi.injectEndpoints({
                     method: "GET"
                 }
             },
-            providesTags: (result, error, productId) => [{ type: "Food", id: productId }]
+            providesTags: ["Food"]
         }),
         addFood: builder.mutation<GenericResponse<Food>, any>({
             query: (data) => {
@@ -61,6 +61,15 @@ const appApi = baseApi.injectEndpoints({
                 }
             }
         }),
+        toggleFoodAvailability: builder.mutation({
+            query: (id) => {
+                return {
+                    url: `/foods/${id}/toggle-availability`,
+                    method: "PATCH"
+                }
+            },
+            invalidatesTags: ["Food"]
+        }),
     })
 })
 
@@ -70,5 +79,6 @@ export const {
     useAddFoodMutation,
     useUpdateFoodMutation,
     useDeleteFoodMutation,
-    useUploadImageMutation
+    useUploadImageMutation,
+    useToggleFoodAvailabilityMutation
 } = appApi;
