@@ -61,7 +61,7 @@ export default function VerifyOtpPage() {
     updateOtpValue(updated)
 
     // Focus next input if not the last one
-    if (index < 4) {
+    if (index < 5) {
       inputRefs.current[index + 1]?.focus()
     }
   }
@@ -86,10 +86,10 @@ export default function VerifyOtpPage() {
   const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     e.preventDefault()
     const pastedData = e.clipboardData.getData('text').trim()
-    if (/^\d{5}$/.test(pastedData)) {
+    if (/^\d{6}$/.test(pastedData)) {
       const newOtpValues = pastedData.split('')
       updateOtpValue(newOtpValues)
-      inputRefs.current[4]?.focus()
+      inputRefs.current[5]?.focus()
     }
   }
 

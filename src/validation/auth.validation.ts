@@ -25,7 +25,7 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>
 export const verifyOtpSchema = z.object({
   otp: z
     .string()
-    .length(5, "OTP must be exactly 5 digits")
+    .length(6, "OTP must be exactly 6 digits")
     .regex(/^\d+$/, "OTP must contain only numbers"),
 })
 
