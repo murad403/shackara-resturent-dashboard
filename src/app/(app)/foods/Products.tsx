@@ -51,7 +51,7 @@ const Products = () => {
 
   // Navigate to edit product page
   const handleEdit = (id: number | string) => {
-    router.push(`/products/edit-food?id=${id}`)
+    router.push(`/foods/edit-food?id=${id}`)
   }
 
   // Open delete confirmation modal

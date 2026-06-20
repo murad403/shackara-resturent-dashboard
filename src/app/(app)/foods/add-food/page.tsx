@@ -166,14 +166,14 @@ export default function AddProductPage() {
       {/* Header with back navigation button */}
       <div className="flex items-center gap-4">
         <Link
-          href="/products"
+          href="/foods"
           className="w-10 h-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-500 cursor-pointer shadow-xs focus:outline-none shrink-0"
         >
           <ArrowLeft className="w-5 h-5 text-gray-500" />
         </Link>
         <div className="space-y-0.5">
           <h1 className="text-xl md:text-2xl font-bold text-title tracking-tight">
-            Add New Product
+            Add New Food
           </h1>
           <p className="text-xs text-subtitle">
             Add a new item to your menu

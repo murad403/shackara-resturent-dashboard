@@ -62,7 +62,7 @@ const ProductCard = ({ product, onToggleActive, onEdit, onDelete }: ProductCardP
         <div className="space-y-2">
           {/* Header Row: Title & Price */}
           <div className="flex items-start justify-between gap-2">
-            <Link href={`/products/${product.id}`} className="hover:text-button-color transition-colors truncate flex-1 block">
+            <Link href={`/foods/${product.id}`} className="hover:text-button-color transition-colors truncate flex-1 block">
               <h4 className="font-bold text-title text-base leading-snug truncate" title={product.name}>
                 {product.name}
               </h4>

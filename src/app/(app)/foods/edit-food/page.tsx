@@ -298,8 +298,8 @@ function EditProductForm() {
       <div className="text-center py-20 bg-white border border-gray-200 rounded-2xl p-6 max-w-xl mx-auto space-y-4 select-none">
         <h2 className="text-lg font-bold text-title">Product Not Found</h2>
         <p className="text-sm text-subtitle">The product item you are trying to edit does not exist or has been deleted.</p>
-        <Link href="/products" passHref>
-          <Button className="bg-button-color font-semibold cursor-pointer">Back to Products</Button>
+        <Link href="/foods" passHref>
+          <Button className="bg-button-color font-semibold cursor-pointer">Back to Foods</Button>
         </Link>
       </div>
     )
@@ -310,7 +310,7 @@ function EditProductForm() {
       {/* Header */}
       <div className="flex items-center gap-4">
         <Link
-          href="/products"
+          href="/foods"
           className="w-10 h-10 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 flex items-center justify-center text-gray-500 cursor-pointer shadow-xs focus:outline-none shrink-0"
         >
           <ArrowLeft className="w-5 h-5 text-gray-500" />
